@@ -1,0 +1,7 @@
+# This Caddyfile is used for simple reverse proxy testing of gosnappass
+:8080 {
+        respond "Hello from Caddy! Try reaching the /sharepass/ endpoint."
+        handle_path /sharepass/* {
+                reverse_proxy localhost:5000
+        }
+}
