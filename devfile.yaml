@@ -1,0 +1,52 @@
+commands:
+- exec:
+    commandLine: make build
+    component: runtime
+    env:
+    - name: GOPATH
+      value: ${PROJECT_SOURCE}/.go
+    - name: GOCACHE
+      value: ${PROJECT_SOURCE}/.cache
+    group:
+      isDefault: true
+      kind: build
+    workingDir: ${PROJECT_SOURCE}
+  id: build
+- exec:
+    commandLine: ./build/gosnappass
+    component: runtime
+    group:
+      isDefault: true
+      kind: run
+    workingDir: ${PROJECT_SOURCE}
+  id: run
+components:
+- container:
+    args:
+    - tail
+    - -f
+    - /dev/null
+    endpoints:
+    - name: port-5000-tcp
+      protocol: tcp
+      targetPort: 5000
+    image: docker.io/golang:1.19
+    memoryLimit: 1024Mi
+    mountSources: true
+  name: runtime
+- container:
+    image: docker.io/redis/redis-stack 
+    memoryLimit: 1024Mi
+  name: db
+metadata:
+  description: Share Passwords Securely
+  displayName: GoSnappass
+  icon: https://raw.githubusercontent.com/concerthall/gosnappass/main/assets/gosnappass.svg
+  language: Go
+  name: gosnappass
+  projectType: Go
+  provider: The Concert Hall
+  tags:
+  - Go
+  version: 0.0.1
+schemaVersion: 2.1.0
